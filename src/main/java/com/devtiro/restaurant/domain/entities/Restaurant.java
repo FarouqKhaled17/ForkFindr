@@ -35,8 +35,10 @@ public class Restaurant {
     @Field(type = FieldType.Nested)
     private OperatingHours operatingHours;
     @Field(type = FieldType.Nested)
+    @Builder.Default
     private List<Review> reviews=new ArrayList<>();
     @Field(type = FieldType.Nested)
+    @Builder.Default
     private List<Photo> photos=new ArrayList<>();
     @Field(type = FieldType.Nested)
     private User createdBy;
