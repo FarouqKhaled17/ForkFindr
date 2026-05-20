@@ -26,7 +26,7 @@ public class ErrorController {
     }
 
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ErrorDto> handleBaseException(StorageException ex){
+    public ResponseEntity<ErrorDto> handleBaseException(BaseException ex){
         log.error("Base Exception",ex);
         ErrorDto errorDto=ErrorDto.builder()
                 .status(500)
@@ -36,7 +36,7 @@ public class ErrorController {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDto> handleException(StorageException ex){
+    public ResponseEntity<ErrorDto> handleException(Exception ex){
         log.error("caught unExpected Exception",ex);
         ErrorDto errorDto=ErrorDto.builder()
                 .status(500)

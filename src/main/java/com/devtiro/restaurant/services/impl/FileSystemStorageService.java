@@ -66,6 +66,7 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Optional<Resource> loadAsResource(String fileName) {
         try {
+            // This Line is to resolve the file path based on the provided file name and the root location, and then create a UrlResource from that path
             Path file = rootLocation.resolve(fileName);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
