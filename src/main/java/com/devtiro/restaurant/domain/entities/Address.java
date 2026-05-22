@@ -26,5 +26,4 @@ public class Address {
     private String postalCode;
     @Field(type = FieldType.Keyword)
     private String country;
-
 }

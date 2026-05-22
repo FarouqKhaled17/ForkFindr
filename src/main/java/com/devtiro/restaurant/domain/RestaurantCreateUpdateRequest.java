@@ -1,5 +1,6 @@
 package com.devtiro.restaurant.domain;
 
+import com.devtiro.restaurant.domain.entities.Address;
 import com.devtiro.restaurant.domain.entities.OperatingHours;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ public class RestaurantCreateUpdateRequest {
     private String name;
     private String cuisineType;
     private String contactInformation;
-    private String address;
+    private Address address;
     private OperatingHours operatingHours;
     private List<String> photoIds;
 }
