@@ -1,18 +1,13 @@
 package com.devtiro.restaurant.domain.dtos;
 
-import com.devtiro.restaurant.domain.entities.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.GeoPointField;
-import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -27,7 +22,10 @@ public class RestaurantCreateUpdateDtoRequest {
     @NotBlank(message = "Contact information is required")
     private String contactInformation;
 
+    @Valid
     private AddressDto address;
+    @Valid
     private OperatingHoursDto operatingHours;
+    @Size(min = 1, message = "At least one photo ID is required")
     private List<String> photoIds;
 }

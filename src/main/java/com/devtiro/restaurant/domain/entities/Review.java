@@ -23,13 +23,13 @@ public class Review {
     private String content;
     @Field(type = FieldType.Keyword)
     private Integer rating;
-    @Field(type = FieldType.Date , format = DateFormat.date_hour_minute_second)
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
     private LocalDateTime datePosted;
-    @Field(type = FieldType.Date , format = DateFormat.date_hour_minute_second)
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
     private LocalDateTime lastEdited;
     @Field(type = FieldType.Nested)
     @Builder.Default
-    private List<Photo> photos=new ArrayList<>();
+    private List<Photo> photos = new ArrayList<>();
     @Field(type = FieldType.Nested)
     private User writtenBy;
 }

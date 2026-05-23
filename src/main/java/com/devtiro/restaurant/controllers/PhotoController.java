@@ -31,6 +31,7 @@ public class PhotoController {
     public ResponseEntity<Resource> getPhoto(@PathVariable String id){
         return photoService.getPhotoAsResource(id).map(photo->
                 ResponseEntity.ok()
+//                        This tells the browser to display the image inline if possible, rather than prompting the user to download it.
                         .contentType(MediaTypeFactory.getMediaType(photo).orElse(MediaType.APPLICATION_OCTET_STREAM))
                         .header(HttpHeaders.CONTENT_DISPOSITION,"inline")
                         .body(photo))
