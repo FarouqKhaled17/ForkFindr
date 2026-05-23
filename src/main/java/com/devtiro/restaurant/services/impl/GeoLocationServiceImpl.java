@@ -3,9 +3,11 @@ package com.devtiro.restaurant.services.impl;
 import com.devtiro.restaurant.domain.GeoLocation;
 import com.devtiro.restaurant.domain.entities.Address;
 import com.devtiro.restaurant.services.GeoLocationService;
+import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
+@Service
 public class GeoLocationServiceImpl implements GeoLocationService {
     private static final float MIN_LATITUDE = -180;
     private static final float MAX_LATITUDE = 180;
@@ -21,6 +23,5 @@ public class GeoLocationServiceImpl implements GeoLocationService {
                 .latitude(latitude)
                 .longitude(longitude)
                 .build();
-
     }
 }
