@@ -49,4 +49,22 @@ public class RestaurantController {
                 .map(restaurant -> ResponseEntity.ok(restaurantMapper.toRestaurantDto(restaurant)))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping(path = "/{restaurant_id}")
+    public ResponseEntity<RestaurantDto> updateRestaurant(
+            @PathVariable ("restaurant_id") String restaurantId,
+            @Valid @RequestBody RestaurantCreateUpdateDtoRequest request
+    ){
+        RestaurantCreateUpdateRequest restaurantCreateUpdateRequest=
+                restaurantMapper.toCreateUpdateRequest(request);
+        Restaurant updatedRestaurant=restaurantService.updateRestaurant(restaurantId,restaurantCreateUpdateRequest);
+        return ResponseEntity.ok(restaurantMapper.toRestaurantDto(updatedRestaurant));
+    }
+
+    @DeleteMapping(path = "/{restaurant_id}")
+    public ResponseEntity<Void> deleteRestaurant(
+            @PathVariable ("restaurant_id") String restaurantId){
+                restaurantService.deleteRestaurantById(restaurantId);
+                return ResponseEntity.noContent().build();
+    }
 }

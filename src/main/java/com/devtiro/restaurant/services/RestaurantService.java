@@ -11,4 +11,6 @@ public interface RestaurantService {
     Restaurant createRestaurant(RestaurantCreateUpdateRequest request);
     Page<Restaurant> searchRestaurants(String query, Float minRating, Float latitude, Float longitude, Float radius,Pageable pageable);
     Optional<Restaurant> getRestaurantById(String id);
+    Restaurant updateRestaurant(String id, RestaurantCreateUpdateRequest request);
+    void deleteRestaurantById(String id);
 }

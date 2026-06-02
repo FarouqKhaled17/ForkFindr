@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,5 +70,36 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Optional<Restaurant> getRestaurantById(String id) {
         return restaurantRepository.findById(id);
+    }
+
+    @Override
+    public Restaurant updateRestaurant(String id, RestaurantCreateUpdateRequest request) {
+        Restaurant restaurant = getRestaurantById(id)
+                .orElseThrow(()->new RuntimeException("Restaurant not found with id: "+id));
+        GeoLocation newGeoLocation=geoLocationService.getGeoLocation(request.getAddress());
+        GeoPoint newGeoPoint=new GeoPoint(newGeoLocation.getLatitude(), newGeoLocation.getLongitude());
+        List<String> photoIds=request.getPhotoIds();
+        List<Photo> photos=photoIds.stream()
+                .map(photoUrl->Photo.builder()
+                        .url(photoUrl)
+                        .uploadDate(LocalDateTime.now())
+                        .build())
+                .toList();
+        restaurant.setName(request.getName());
+        restaurant.setCuisineType(request.getCuisineType());
+        restaurant.setContactInfo(request.getContactInformation());
+        restaurant.setGeoLocation(newGeoPoint);
+        restaurant.setAddress(request.getAddress());
+        restaurant.setOperatingHours(request.getOperatingHours());
+        restaurant.setPhotos(photos);
+        return restaurantRepository.save(restaurant);
+    }
+
+    @Override
+    public void deleteRestaurantById(String id) {
+        if(!restaurantRepository.existsById(id)){
+            throw new RuntimeException("Restaurant not found with id: "+id);
+        }
+        restaurantRepository.deleteById(id);
     }
 }
