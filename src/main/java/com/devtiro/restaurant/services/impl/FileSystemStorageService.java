@@ -19,17 +19,26 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
 public class FileSystemStorageService implements StorageService {
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "webp", "gif");
+
     @Value("${app.storage.location:uploads}")
+//    This line is to inject the value of the storage location from the application properties, with a default value of "uploads" if not specified
     private String storageLocation;
+//    This line is to define a Path variable to hold the root location of the storage directory and used to perform filesystem operations.
     private Path rootLocation;
 
     @PostConstruct
+//    To indicate that the init() method should be executed after the bean has been constructed and all dependencies have been injected, ensuring that the storage directory is created before any file operations are performed.
     public void init(){
-        rootLocation= Paths.get(storageLocation);
+//  This line is to resolve the storage location path, convert it to an absolute path, and normalize it to remove any redundant elements like "." or ".."
+        rootLocation= Paths.get(storageLocation)
+                .toAbsolutePath()
+                .normalize();
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e){
@@ -45,6 +54,7 @@ public class FileSystemStorageService implements StorageService {
             }
             String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
             String finalFileName = fileName + "." + extension;
+//            This line is to resolve the destination path for the file to be stored, based on the root location and the final file name, and then normalize and convert it to an absolute path
             Path destinationFile = rootLocation
                     .resolve(Paths.get(finalFileName))
                     .normalize()
@@ -52,6 +62,11 @@ public class FileSystemStorageService implements StorageService {
 //             This line to ensure that the file is stored within the root location and prevent path traversal attacks
             if (!destinationFile.getParent().equals(rootLocation.toAbsolutePath())) {
                 throw new StorageException("Cannot store file outside current directory");
+            }
+//            Do not follow an existing symbolic link when overwriting.
+            if (Files.isSymbolicLink(destinationFile)) {
+                throw new StorageException(
+                        "Cannot overwrite a symbolic link");
             }
 //            This line to copy the file to the destination path, replacing any existing file with the same name
             try (InputStream inputStream = file.getInputStream()) {
@@ -69,7 +84,7 @@ public class FileSystemStorageService implements StorageService {
             // This Line is to resolve the file path based on the provided file name and the root location, and then create a UrlResource from that path
             Path file = rootLocation.resolve(fileName);
             Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
+            if (resource.exists() && resource.isReadable()) {
                 return Optional.of(resource);
             }
             return Optional.empty();
